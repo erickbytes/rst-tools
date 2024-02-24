@@ -20,7 +20,7 @@ def check_rst_links(file_path):
     # Iterate over matches
     for match in url_pattern.finditer(content):
         url_tag = match.group(0)
-        rprint(f"[dark_cyan]{url_tag}[/dark_cyan]", sep="\n")
+        rprint(f"[dark_cyan]<> {url_tag}[/dark_cyan]", sep="\n")
         # Skip false positive url tags without urls.
         if "http" not in str(url_tag):
             rprint(f"[gold3]Skipped {url_tag}[/gold3]", sep="\n")
@@ -28,18 +28,18 @@ def check_rst_links(file_path):
         try:
             # Check if the URL is valid
             url = extract_url_from_rst_link(url_tag)
-            rprint(f"[steel_blue]{url}[/steel_blue]", sep="\n")
+            rprint(f"[steel_blue]🔗 {url}[/steel_blue]", sep="\n")
         except:
             rprint("[red]❌ Failed to extract url from tag.[/red]", sep="\n")
         is_valid = validate_rst_url_tag(url_tag)
         if is_valid:
-            rprint("[dark_cyan]✅ Tag meets url requirements.[/dark_cyan]", sep="\n")
+            rprint("[dark_cyan]✅ Meets .rst url tag requirements.[/dark_cyan]", sep="\n")
         else:
             rprint("[red]❌ Tag doesn't meet .rst url tag requirements.[/red]", sep="\n")
         try:
             response = requests.head(url, allow_redirects=True, timeout=15)
             if response.status_code == 200:
-                rprint(f"[dark_cyan]✅ URL successfully loaded.[/dark_cyan]", sep="\n")
+                rprint(f"[dark_cyan]✅ URL loaded successfully.[/dark_cyan]", sep="\n")
             elif response.status_code == 301:
                 redirect_url = response.url
                 line = content.count('\\n', 0, match.start()) + 1
@@ -60,9 +60,9 @@ def check_rst_links(file_path):
             error_count += 1
 
     if error_count == 0:
-        print(f"No errors found in {file_path}.")
+        print(f"No errors found in {file_path}")
     else:
-        print(f"Total {error_count} error(s) found in {file_path}.")
+        print(f"Total {error_count} error(s) found in {file_path}")
 
 
 def extract_url_from_rst_link(url_tag):
