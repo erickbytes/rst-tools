@@ -12,9 +12,8 @@ def post_title():
 
 def copy_template(slug):
     """Copy a reStructuredText template file for a new post."""
-    content = f"{os.getcwd()}/content"
-    rst = f"{content}/blog/drafts/template.rst"
-    dst = f"{content}/blog/{slug}.rst"
+    rst = f"template.rst"
+    dst = f"{slug}.rst"
     copy(rst, dst)
     return dst
 

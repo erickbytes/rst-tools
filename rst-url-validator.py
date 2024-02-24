@@ -22,7 +22,7 @@ def check_rst_links(file_path):
         url_tag = match.group(0)
         # Skip false positive url tags without urls.
         if "http" not in str(url_tag):
-            rprint(f"[gold]Skipped {url_tag}[/gold]", sep="\n")
+            rprint(f"[gold3]Skipped {url_tag}[/gold3]", sep="\n")
             continue
         rprint(f"[dark_cyan]{url_tag}[/dark_cyan]", sep="\n")
         is_valid = validate_rst_url_tag(url_tag)
@@ -38,14 +38,12 @@ def check_rst_links(file_path):
             if response.status_code == 200:
                 rprint(f"[dark_cyan]URL successfully loaded.[/dark_cyan]", sep="\n")
             if response.status_code != 200:
-                print(
-                    f"Error: Invalid URL '{url}' found on line {content.count('\\n', 0, match.start()) + 1} with status code {response.status_code}"
-                )
+                line = content.count('\\n', 0, match.start()) + 1
+                rprint(f"[gold3]Error: Invalid URL '{url}' found on line {line} with status code {response.status_code}[/gold3]", sep="\n")
                 error_count += 1
+            print("\n")
         except requests.RequestException:
-            print(
-                f"Error: Unable to check URL '{url}' on line {content.count('\\n', 0, match.start()) + 1}"
-            )
+            rprint(f"[gold3]Error: Unable to check URL '{url}' on line {content.count('\\n', 0, match.start()) + 1}[/gold3]", sep="\n")
             print(response.text)
             error_count += 1
 
@@ -56,7 +54,7 @@ def check_rst_links(file_path):
 
 
 def extract_url_from_rst_link(url_tag):
-    # Regular expression to extract the URL from an .rst link
+    # Accepts .rst url tag, returns url.
     url = (
         url_tag.replace(">`__", "")
         .replace("[", "")
