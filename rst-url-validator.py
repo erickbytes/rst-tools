@@ -53,10 +53,8 @@ def check_rst_links(file_path):
             print("\n")
         except requests.Timeout:
             rprint(f"[gold3]Error: Request timed out '{url}' on line {content.count('\\n', 0, match.start()) + 1}[/gold3]", sep="\n")
-            print(response.text)
         except requests.RequestException:
             rprint(f"[gold3]Error: Unable to check URL '{url}' on line {content.count('\\n', 0, match.start()) + 1}[/gold3]", sep="\n")
-            print(response.text)
             error_count += 1
 
     if error_count == 0:
