@@ -1,6 +1,13 @@
 # rst-tools
 scripts for working with reStructuredText Format
 
+**Install Python Dependencies**
+
+```
+pip install requests
+pip install rich
+```
+
 **Run the RST Validator CLI**
 
 ```
