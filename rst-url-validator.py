@@ -27,7 +27,13 @@ def check_rst_links(file_path):
             continue
         try:
             # Check if the URL is valid
-            url = extract_url_from_rst_link(url_tag)
+            url = (
+                url_tag.replace(">`__", "")
+                .replace("[", "")
+                .replace("]", "")
+                .replace("\\", "")
+                .split("<")[1]
+            )
             rprint(f"[steel_blue]🔗 {url}[/steel_blue]", sep="\n")
         except:
             rprint("[red]❌ Failed to extract url from tag.[/red]", sep="\n")
@@ -61,18 +67,6 @@ def check_rst_links(file_path):
         print(f"No errors found in {file_path}")
     else:
         print(f"Total {error_count} error(s) found in {file_path}")
-
-
-def extract_url_from_rst_link(url_tag):
-    # Accepts .rst url tag, returns url.
-    url = (
-        url_tag.replace(">`__", "")
-        .replace("[", "")
-        .replace("]", "")
-        .replace("\\", "")
-        .split("<")[1]
-    )
-    return url
 
 
 def validate_rst_url_tag(url_tag):
