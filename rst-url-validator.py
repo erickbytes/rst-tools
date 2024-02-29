@@ -70,7 +70,7 @@ def check_rst_links(file_path):
                 rprint("[dark_cyan]✅ URL loaded successfully.[/dark_cyan]", sep="\n")
             elif response.status_code == 301:
                 redirect_url = response.url
-                line = content.count("\\n", 0, match.start()) + 1
+                line = content.count("\n", 0, match.start()) + 1
                 rprint(
                     f"[gold3]🛈  Warning: URL is a 301 redirect to {redirect_url} found on line {line} with status code {response.status_code}[/gold3]",
                     sep="\n",
@@ -83,7 +83,7 @@ def check_rst_links(file_path):
                 )
                 warning_count += 1
             elif response.status_code != 200:
-                line = content.count("\\n", 0, match.start()) + 1
+                line = content.count("\n", 0, match.start()) + 1
                 rprint(
                     f"[red]❌ Error: Invalid URL '{url}' found on line {line} with status code {response.status_code}[/red]",
                     sep="\n",
@@ -92,13 +92,13 @@ def check_rst_links(file_path):
             print("\n")
         except requests.Timeout:
             rprint(
-                f"[red]❌ Error: Request timed out '{url}' on line {content.count('\\n', 0, match.start()) + 1}[/red]",
+                f"[red]❌ Error: Request timed out '{url}' on line {content.count('\n', 0, match.start()) + 1}[/red]",
                 sep="\n",
             )
             error_count += 1
         except requests.RequestException:
             rprint(
-                f"[red]❌ Error: Unable to check URL '{url}' on line {content.count('\\n', 0, match.start()) + 1}[/red]",
+                f"[red]❌ Error: Unable to check URL '{url}' on line {content.count('\n', 0, match.start()) + 1}[/red]",
                 sep="\n",
             )
             error_count += 1
