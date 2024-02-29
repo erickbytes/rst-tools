@@ -138,7 +138,7 @@ def validate_rst_url_tag(url_tag):
     Returns:
         bool: True if the URL tag is valid, False otherwise.
     """
-    required_characters = {"<", ">", "`", "_", "__", "`__", ">`__"}
+    required_characters = {"<", ">", "`", "_", "`_", ">`_"}
     return all(char in url_tag for char in required_characters)
 
 
