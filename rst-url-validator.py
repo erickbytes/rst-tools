@@ -85,20 +85,20 @@ def check_rst_links(file_path):
             elif response.status_code != 200:
                 line = content.count("\\n", 0, match.start()) + 1
                 rprint(
-                    f"[gold3]❌ Error: Invalid URL '{url}' found on line {line} with status code {response.status_code}[/gold3]",
+                    f"[red]❌ Error: Invalid URL '{url}' found on line {line} with status code {response.status_code}[/red]",
                     sep="\n",
                 )
                 error_count += 1
             print("\n")
         except requests.Timeout:
             rprint(
-                f"[gold3]Error: Request timed out '{url}' on line {content.count('\\n', 0, match.start()) + 1}[/gold3]",
+                f"[red]❌ Error: Request timed out '{url}' on line {content.count('\\n', 0, match.start()) + 1}[/red]",
                 sep="\n",
             )
             error_count += 1
         except requests.RequestException:
             rprint(
-                f"[gold3]Error: Unable to check URL '{url}' on line {content.count('\\n', 0, match.start()) + 1}[/gold3]",
+                f"[red]❌ Error: Unable to check URL '{url}' on line {content.count('\\n', 0, match.start()) + 1}[/red]",
                 sep="\n",
             )
             error_count += 1
