@@ -29,7 +29,10 @@ def check_rst_links(file_path):
         return
 
     # Regular expression to match URLs in the .rst file.
-    url_pattern = re.compile(r"`.*?`__")
+    url_pattern = re.compile(r"`.*?`__", flags=re.DOTALL)
+
+    # Secondary check for "< >".
+    occurrences = len(re.findall(r"<[^>]+>", content))
 
     # Initialize error and warning counts.
     error_count = 0
@@ -113,6 +116,9 @@ def check_rst_links(file_path):
         print("✅ No warnings.")
     else:
         print(f"🛈  {warning_count} total warning(s).")
+    matches = len(list(url_pattern.finditer(content)))
+    if occurrences != matches:
+        print(f"❌ Possible discrepancy: found {occurrences} <> brackets and only url {matches} matches. Check for document for invalid urls.")
     return None
 
 
