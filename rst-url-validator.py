@@ -29,10 +29,10 @@ def check_rst_links(file_path):
         return
 
     # Regular expression to match URLs in the .rst file.
-    url_pattern = re.compile(r"`.*?`__", flags=re.DOTALL)
+    url_pattern = re.compile(r"`[^`]+`_+|`[^`]+`__", flags=re.DOTALL)
 
     # Secondary check for "< >".
-    occurrences = len(re.findall(r"<[^>]+>", content))
+    occurrences = len(re.findall(r"<(?!/)[^>]+>", content, flags=re.DOTALL))
 
     # Initialize error and warning counts.
     error_count = 0
@@ -50,6 +50,7 @@ def check_rst_links(file_path):
             # Check if the URL is valid
             url = (
                 url_tag.replace(">`__", "")
+                .replace(">`_", "")
                 .replace("[", "")
                 .replace("]", "")
                 .replace("\\", "")
@@ -58,6 +59,7 @@ def check_rst_links(file_path):
             rprint(f"[steel_blue]🔗 {url}[/steel_blue]", sep="\n")
         except:
             rprint("[red]❌ Failed to extract url from tag.[/red]", sep="\n")
+            error_count += 1
         is_valid = validate_rst_url_tag(url_tag)
         if is_valid:
             rprint(
@@ -67,6 +69,7 @@ def check_rst_links(file_path):
             rprint(
                 "[red]❌ Tag doesn't meet .rst url tag requirements.[/red]", sep="\n"
             )
+            error_count += 1
         try:
             response = requests.head(url, allow_redirects=True, timeout=15)
             if response.status_code == 200:
@@ -79,12 +82,14 @@ def check_rst_links(file_path):
                     sep="\n",
                 )
                 warning_count += 1
+                print("\n")
             elif response.status_code == 403:
                 rprint(
                     f"[gold3]🛈  Warning: Unable to validate URL, permission denied with status code {response.status_code}[/gold3]",
                     sep="\n",
                 )
                 warning_count += 1
+                print("\n")
             elif response.status_code != 200:
                 line = content.count("\n", 0, match.start()) + 1
                 rprint(
@@ -99,14 +104,18 @@ def check_rst_links(file_path):
                 sep="\n",
             )
             error_count += 1
+            print("\n")
         except requests.RequestException:
             rprint(
                 f"[red]❌ Error: Unable to check URL '{url}' on line {content.count('\n', 0, match.start()) + 1}[/red]",
                 sep="\n",
             )
             error_count += 1
+            print("\n")
 
     print(f"File: {file_path}")
+    matches = len(list(url_pattern.finditer(content)))
+    print(f"Scanned {matches} urls.")
     if error_count == 0:
         print("✅ No errors found.")
     else:
@@ -116,9 +125,8 @@ def check_rst_links(file_path):
         print("✅ No warnings.")
     else:
         print(f"🛈  {warning_count} total warning(s).")
-    matches = len(list(url_pattern.finditer(content)))
     if occurrences != matches:
-        print(f"❌ Possible discrepancy: found {occurrences} <> brackets and only url {matches} matches. Check for document for invalid urls.")
+        print(f"❌ Possible discrepancy: found {occurrences} occurrences of <> brackets and only {matches} url matches. Check for document for invalid urls.")
     return None
 
 
@@ -130,7 +138,7 @@ def validate_rst_url_tag(url_tag):
     Returns:
         bool: True if the URL tag is valid, False otherwise.
     """
-    required_characters = {"<", ">", "`", "_", "__", "`__", "`__", ">`__"}
+    required_characters = {"<", ">", "`", "_", "__", "`__", ">`__"}
     return all(char in url_tag for char in required_characters)
 
 
