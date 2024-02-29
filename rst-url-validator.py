@@ -72,13 +72,13 @@ def check_rst_links(file_path):
                 redirect_url = response.url
                 line = content.count("\\n", 0, match.start()) + 1
                 rprint(
-                    f"[gold3]Warning: URL is a 301 redirect to {redirect_url} found on line {line} with status code {response.status_code}[/gold3]",
+                    f"[gold3]🛈  Warning: URL is a 301 redirect to {redirect_url} found on line {line} with status code {response.status_code}[/gold3]",
                     sep="\n",
                 )
                 warning_count += 1
             elif response.status_code == 403:
                 rprint(
-                    f"[gold3]Warning: Unable to validate URL, permission denied with status code {response.status_code}[/gold3]",
+                    f"[gold3]🛈  Warning: Unable to validate URL, permission denied with status code {response.status_code}[/gold3]",
                     sep="\n",
                 )
                 warning_count += 1
@@ -112,7 +112,7 @@ def check_rst_links(file_path):
     if warning_count == 0:
         print("✅ No warnings.")
     else:
-        print(f"{warning_count} total warning(s).")
+        print(f"🛈  {warning_count} total warning(s).")
     return None
 
 
