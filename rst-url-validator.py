@@ -31,23 +31,22 @@ def check_rst_links(file_path):
     # Regular expression to match URLs in the .rst file.
     url_pattern = re.compile(r"`[^`]+`_+|`[^`]+`__", flags=re.DOTALL)
 
-    # Secondary check for "< >".
+    # Secondary check for "< >" and ignore HTML tags like "</p>".
     occurrences = len(re.findall(r"<(?!/)[^>]+>", content, flags=re.DOTALL))
 
     # Initialize error and warning counts.
     error_count = 0
     warning_count = 0
 
-    # Iterate over matches
+    # Iterate over matches.
     for match in url_pattern.finditer(content):
         url_tag = match.group(0)
         rprint(f"[dark_cyan]<> {url_tag}[/dark_cyan]", sep="\n")
-        # Skip false positive url tags without urls.
+        # Skip false positive url tags without HTTP urls.
         if "http" not in str(url_tag):
             rprint(f"[gold3]Skipped {url_tag}[/gold3]", sep="\n")
             continue
         try:
-            # Check if the URL is valid
             url = (
                 url_tag.replace(">`__", "")
                 .replace(">`_", "")
@@ -60,6 +59,7 @@ def check_rst_links(file_path):
         except:
             rprint("[red]❌ Failed to extract url from tag.[/red]", sep="\n")
             error_count += 1
+        # Check if the URL is valid.
         is_valid = validate_rst_url_tag(url_tag)
         if is_valid:
             rprint(
@@ -70,42 +70,41 @@ def check_rst_links(file_path):
                 "[red]❌ Tag doesn't meet .rst url tag requirements.[/red]", sep="\n"
             )
             error_count += 1
+        line = content.count("\n", 0, match.start()) + 1
         try:
             response = requests.head(url, allow_redirects=True, timeout=15)
             if response.status_code == 200:
                 rprint("[dark_cyan]✅ URL loaded successfully.[/dark_cyan]", sep="\n")
             elif response.status_code == 301:
                 redirect_url = response.url
-                line = content.count("\n", 0, match.start()) + 1
                 rprint(
-                    f"[gold3]🛈  Warning: URL is a 301 redirect to {redirect_url} found on line {line} with status code {response.status_code}[/gold3]",
+                    f"[gold3]🛈  Warning: URL is a 301 redirect to {redirect_url} found on line # {line} with status code {response.status_code}[/gold3]",
                     sep="\n",
                 )
                 warning_count += 1
             elif response.status_code == 403:
                 rprint(
-                    f"[gold3]🛈  Warning: Unable to validate URL, permission denied with status code {response.status_code}[/gold3]",
+                    f"[gold3]🛈  Warning: Unable to validate URL found on line # {line}, permission denied with status code {response.status_code}[/gold3]",
                     sep="\n",
                 )
                 warning_count += 1
             elif response.status_code != 200:
-                line = content.count("\n", 0, match.start()) + 1
                 rprint(
-                    f"[red]❌ Error: Invalid URL '{url}' found on line {line} with status code {response.status_code}[/red]",
+                    f"[red]❌ Error: Invalid URL '{url}' found on line # {line} with status code {response.status_code}[/red]",
                     sep="\n",
                 )
                 error_count += 1
             print("\n")
         except requests.Timeout:
             rprint(
-                f"[red]❌ Error: Request timed out '{url}' on line {content.count('\n', 0, match.start()) + 1}[/red]",
+                f"[red]❌ Error: Request timed out '{url}' on line # {line}[/red]",
                 sep="\n",
             )
             error_count += 1
             print("\n")
         except requests.RequestException:
             rprint(
-                f"[red]❌ Error: Unable to check URL '{url}' on line {content.count('\n', 0, match.start()) + 1}[/red]",
+                f"[red]❌ Error: Unable to check URL '{url}' on line # {line}[/red]",
                 sep="\n",
             )
             error_count += 1
