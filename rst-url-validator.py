@@ -82,14 +82,12 @@ def check_rst_links(file_path):
                     sep="\n",
                 )
                 warning_count += 1
-                print("\n")
             elif response.status_code == 403:
                 rprint(
                     f"[gold3]🛈  Warning: Unable to validate URL, permission denied with status code {response.status_code}[/gold3]",
                     sep="\n",
                 )
                 warning_count += 1
-                print("\n")
             elif response.status_code != 200:
                 line = content.count("\n", 0, match.start()) + 1
                 rprint(
@@ -126,7 +124,7 @@ def check_rst_links(file_path):
     else:
         print(f"🛈  {warning_count} total warning(s).")
     if occurrences != matches:
-        print(f"❌ Possible discrepancy: found {occurrences} occurrences of <> brackets and only {matches} url matches. Check for document for invalid urls.")
+        print(f"❌ Possible discrepancy: found {occurrences} occurrences of <> brackets and only {matches} url matches. Check the document for invalid urls.")
     return None
 
 
