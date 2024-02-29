@@ -89,7 +89,7 @@ def validate_rst_url_tag(url_tag):
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: python check_rst_links.py <path_to_rst_file>")
+        print("Usage: python rst-url-validator.py <path_to_rst_file>")
     else:
         rst_file_path = sys.argv[1]
         check_rst_links(rst_file_path)
