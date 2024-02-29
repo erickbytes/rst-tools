@@ -4,6 +4,22 @@ import requests
 from rich import print as rprint
 
 def check_rst_links(file_path):
+    """
+    Reads a reStructuredText Format document and parse its external links, like this one:
+    
+    `free online courses on Coursera <https://www.coursera.org/learn/python>`__
+    
+    re.compile(r".*?__"): This line of code uses the re.compile() method to create a regular expression pattern object.
+    
+    re.compile(): This function compiles a regular expression pattern provided as a string into a regex pattern object. 
+    The pattern object can then be used to search for occurrences of the same pattern inside different target strings without rewriting it.
+    
+    r".*?__": This is the regular expression pattern itself. 
+    
+    r"  : The r prefix indicates that the string is a raw string, which means escape sequences (like \n or \t) are treated as literal characters.
+    .*? : This part of the pattern matches any sequence of characters (except newline characters) between backticks (`). 
+          The .*? is a non-greedy match, meaning it will match the shortest possible sequence of characters between backticks.
+    __  : This part of the pattern matches the double underscore (__) literally."""
     try:
         with open(file_path, "r") as rst_file:
             content = rst_file.read()
@@ -11,12 +27,13 @@ def check_rst_links(file_path):
         print(f"Error: File '{file_path}' not found.")
         return
 
-    # Regular expression to match URLs in the .rst file
+    # Regular expression to match URLs in the .rst file.
     url_pattern = re.compile(r"`.*?`__")
-
-    # Initialize error count
+    
+    # Initialize error and warning counts.
     error_count = 0
-
+    warning_count = 0
+    
     # Iterate over matches
     for match in url_pattern.finditer(content):
         url_tag = match.group(0)
@@ -50,8 +67,10 @@ def check_rst_links(file_path):
                 redirect_url = response.url
                 line = content.count('\\n', 0, match.start()) + 1
                 rprint(f"[gold3]Warning: URL is a 301 redirect to {redirect_url} found on line {line} with status code {response.status_code}[/gold3]", sep="\n")
+                warning_count += 1
             elif response.status_code == 403:
                 rprint(f"[gold3]Warning: Unable to validate URL, permission denied with status code {response.status_code}[/gold3]", sep="\n")
+                warning_count += 1
             elif response.status_code != 200:
                 line = content.count('\\n', 0, match.start()) + 1
                 rprint(f"[gold3]❌ Error: Invalid URL '{url}' found on line {line} with status code {response.status_code}[/gold3]", sep="\n")
@@ -59,6 +78,7 @@ def check_rst_links(file_path):
             print("\n")
         except requests.Timeout:
             rprint(f"[gold3]Error: Request timed out '{url}' on line {content.count('\\n', 0, match.start()) + 1}[/gold3]", sep="\n")
+            error_count += 1
         except requests.RequestException:
             rprint(f"[gold3]Error: Unable to check URL '{url}' on line {content.count('\\n', 0, match.start()) + 1}[/gold3]", sep="\n")
             error_count += 1
@@ -67,6 +87,11 @@ def check_rst_links(file_path):
         print(f"No errors found in {file_path}")
     else:
         print(f"Total {error_count} error(s) found in {file_path}")
+
+    if warning_count == 0:
+        print(f"No warnings found in {file_path}")
+    else:
+        print(f"Total {warning_count} warning(s) found in {file_path}")
 
 
 def validate_rst_url_tag(url_tag):
