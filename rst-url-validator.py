@@ -133,13 +133,13 @@ def check_rst_links(file_path):
 
 def validate_rst_url_tag(url_tag):
     """
-    Validates an .rst URL tag to ensure it contains the required characters: <, >, `, _, " " (space) and expected multi-character combinations.
+    Validates an .rst URL tag to ensure it contains the required characters: <, >, `, _ and expected multi-character combinations.
     Args:
         url_tag (str): The .rst URL tag to validate.
     Returns:
         bool: True if the URL tag is valid, False otherwise.
     """
-    required_characters = {"<", ">", "`", "_", "`_", ">`_", " "}
+    required_characters = {"<", ">", "`", "_", "`_", ">`_"}
     return all(char in url_tag for char in required_characters)
 
 
