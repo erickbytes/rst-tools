@@ -2,6 +2,7 @@ import sys
 import re
 import requests
 from rich import print as rprint
+import http.client as http_client
 
 
 def check_rst_links(file_path):
@@ -44,8 +45,9 @@ def check_rst_links(file_path):
         rprint(f"[dark_cyan]<> {url_tag}[/dark_cyan]", sep="\n")
         # Skip false positive url tags without HTTP urls.
         if "http" not in str(url_tag):
-            rprint(f"[gold3]🛈  Warning: skipped {url_tag}[/gold3]", sep="\n")
+            rprint(f"[gold3]🛈  Warning: skipped {url_tag}, url is not http.[/gold3]", sep="\n")
             warning_count += 1
+            print("\n")
             continue
         try:
             url = (
@@ -144,6 +146,7 @@ def validate_rst_url_tag(url_tag):
 
 
 if __name__ == "__main__":
+    # http_client.HTTPConnection.debuglevel = 1
     if len(sys.argv) != 2:
         print("Usage: python rst-url-validator.py <path_to_rst_file>")
     else:
