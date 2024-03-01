@@ -22,3 +22,5 @@ The rst-url-validator.py script expects links to be in this format, with a singl
 ```
 `free online courses on Coursera <https://www.coursera.org/learn/python>`__ 
 ```
+Read more about this code in my [rst-url-validator Blog Post](https://lofipython.com/validating-rst-links-with-rst-url-validator).
+

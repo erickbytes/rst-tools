@@ -99,20 +99,20 @@ def check_rst_links(file_path):
                 error_count += 1
             elif response.status_code != 200:
                 rprint(
-                    f"[red]❌ Error: Invalid URL '{url}' found on line # {line} with status code {response.status_code}[/red]",
+                    f"[red]❌ Error: unable to validate URL '{url}', found on line # {line} with status code {response.status_code}[/red]",
                     sep="\n",
                 )
                 error_count += 1
             print("\n")
         except requests.Timeout:
             rprint(
-                f"[red]❌ Error: Request timed out '{url}' on line # {line}[/red]",
+                f"[red]❌ Error: Request timed out for '{url}' on line # {line}[/red]",
                 sep="\n",
             )
             error_count += 1
             print("\n")
         except requests.RequestException:
-            rprint(f"[red]❌ Error: Unable to check URL '{url}' on line # {line}[/red]", sep="\n",)
+            rprint(f"[red]❌ Error: Unable to vlaidate URL '{url}' on line # {line}, connection was terminated by host.[/red]", sep="\n",)
             error_count += 1
             print("\n")
 
