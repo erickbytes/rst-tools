@@ -44,7 +44,8 @@ def check_rst_links(file_path):
         rprint(f"[dark_cyan]<> {url_tag}[/dark_cyan]", sep="\n")
         # Skip false positive url tags without HTTP urls.
         if "http" not in str(url_tag):
-            rprint(f"[gold3]Skipped {url_tag}[/gold3]", sep="\n")
+            rprint(f"[gold3]🛈  Warning: skipped {url_tag}[/gold3]", sep="\n")
+            warning_count += 1
             continue
         try:
             url = (
@@ -88,6 +89,12 @@ def check_rst_links(file_path):
                     sep="\n",
                 )
                 warning_count += 1
+            elif response.status_code == 406:
+                rprint(
+                    f"[red]❌ Error: resource not available in requested format, found on line # {line} with status code {response.status_code}[/red]",
+                    sep="\n",
+                )
+                error_count += 1
             elif response.status_code != 200:
                 rprint(
                     f"[red]❌ Error: Invalid URL '{url}' found on line # {line} with status code {response.status_code}[/red]",
@@ -103,10 +110,7 @@ def check_rst_links(file_path):
             error_count += 1
             print("\n")
         except requests.RequestException:
-            rprint(
-                f"[red]❌ Error: Unable to check URL '{url}' on line # {line}[/red]",
-                sep="\n",
-            )
+            rprint(f"[red]❌ Error: Unable to check URL '{url}' on line # {line}[/red]", sep="\n",)
             error_count += 1
             print("\n")
 
@@ -129,13 +133,13 @@ def check_rst_links(file_path):
 
 def validate_rst_url_tag(url_tag):
     """
-    Validates an .rst URL tag to ensure it contains the required characters: <, >, `, _, and expected multi-character combinations.
+    Validates an .rst URL tag to ensure it contains the required characters: <, >, `, _, " " (space) and expected multi-character combinations.
     Args:
         url_tag (str): The .rst URL tag to validate.
     Returns:
         bool: True if the URL tag is valid, False otherwise.
     """
-    required_characters = {"<", ">", "`", "_", "`_", ">`_"}
+    required_characters = {"<", ">", "`", "_", "`_", ">`_", " "}
     return all(char in url_tag for char in required_characters)
 
 
