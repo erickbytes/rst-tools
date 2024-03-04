@@ -10,7 +10,7 @@ pip install rich
 
 **Run the RST URL Validator CLI**
 ```
-python3.12 rst-url-validator.py your_file.rst
+python rst-url-validator.py your_file.rst
 ```
 
 ![console view of rst-url-validator.py](rst-url-validator-report.png "rst validator")
