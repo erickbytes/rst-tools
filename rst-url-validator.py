@@ -11,17 +11,8 @@ def check_rst_links(file_path):
 
     `free online courses on Coursera <https://www.coursera.org/learn/python>`__
 
-    re.compile(r".*?__"): This line of code uses the re.compile() method to create a regular expression pattern object.
-
     re.compile(): This function compiles a regular expression pattern provided as a string into a regex pattern object.
-    The pattern object can then be used to search for occurrences of the same pattern inside different target strings without rewriting it.
-
-    r".*?__": This is the regular expression pattern itself.
-
-    r"  : The r prefix indicates that the string is a raw string, which means escape sequences (like \n or \t) are treated as literal characters.
-    .*? : This part of the pattern matches any sequence of characters (except newline characters) between backticks (`).
-          The .*? is a non-greedy match, meaning it will match the shortest possible sequence of characters between backticks.
-    __  : This part of the pattern matches the double underscore (__) literally."""
+    The pattern object can then be used to search for occurrences of the same pattern inside different target strings without rewriting it."""
     try:
         with open(file_path, "r") as rst_file:
             content = rst_file.read()
