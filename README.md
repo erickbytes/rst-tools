@@ -19,6 +19,7 @@ python rst-url-validator.py your_file.rst
 **Pass --debug to Run in HTTP Debug Mode**
 ```
 python rst-url-validator.py your_file.rst --debug
+```
 
 **External .rst Links**
 
