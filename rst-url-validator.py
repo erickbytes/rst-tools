@@ -11,8 +11,28 @@ def check_rst_links(file_path):
 
     `free online courses on Coursera <https://www.coursera.org/learn/python>`__
 
-    re.compile(): This function compiles a regular expression pattern provided as a string into a regex pattern object.
-    The pattern object can then be used to search for occurrences of the same pattern inside different target strings without rewriting it."""
+    re.compile(r"[^]+_+|[^]+__", flags=re.DOTALL):
+
+    re.compile() creates a compiled regex object that can be used for pattern matching.
+    The pattern inside the parentheses defines what we're searching for.
+    Flags can modify how the regex engine interprets the pattern. 
+    In this case, re.DOTALL allows the dot (.) to match newline characters as well.
+
+    The pattern consists of two alternatives separated by the pipe (|) symbol.
+    
+    First Alternative [^]+_+
+    [^]     matches any character except a backtick (`` ``).
+    +       means one or more occurrences of the preceding character class (in this case, any character except a backtick).
+    _       matches a literal underscore character.
+    +       means one or more underscores.
+    
+    This part of the pattern matches backticked text followed by one or more underscores (e.g., `` some_text_`).
+    
+    Second Alternative [^]+__
+    [^]+`   Same as above, it matches any character except a backtick.
+    __      Matches two consecutive underscore characters.
+
+    This part of the pattern matches backticked text followed by two underscores (e.g., `` another_text__`)."""
     try:
         with open(file_path, "r") as rst_file:
             content = rst_file.read()
@@ -54,7 +74,8 @@ def check_rst_links(file_path):
             rprint("[red]❌ Failed to extract url from tag.[/red]", sep="\n")
             error_count += 1
         # Check if the URL is valid.
-        is_valid = validate_rst_url_tag(url_tag)
+        required_characters = {"<", ">", "`", "_", "`_", ">`_"}
+        is_valid = all(char in url_tag for char in required_characters)
         if is_valid:
             rprint(
                 "[dark_cyan]✅ Meets .rst url tag requirements.[/dark_cyan]", sep="\n"
@@ -122,18 +143,6 @@ def check_rst_links(file_path):
     if occurrences != matches:
         print(f"❌ Possible discrepancy: found {occurrences} occurrences of <> brackets and only {matches} url matches. Check the document for invalid urls.")
     return None
-
-
-def validate_rst_url_tag(url_tag):
-    """
-    Validates an .rst URL tag to ensure it contains the required characters: <, >, `, _ and expected multi-character combinations.
-    Args:
-        url_tag (str): The .rst URL tag to validate.
-    Returns:
-        bool: True if the URL tag is valid, False otherwise.
-    """
-    required_characters = {"<", ">", "`", "_", "`_", ">`_"}
-    return all(char in url_tag for char in required_characters)
 
 
 if __name__ == "__main__":
