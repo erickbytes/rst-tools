@@ -144,7 +144,7 @@ def check_rst_links(file_path):
 if __name__ == "__main__":
     if "--debug" in sys.argv:
         http_client.HTTPConnection.debuglevel = 1
-    if len(sys.argv) > 3:
+    if len(sys.argv) != 2 and len(sys.argv) != 3:
         print("Usage: python rst-url-validator.py <path_to_rst_file>")
     else:
         rst_file_path = sys.argv[1]
