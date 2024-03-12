@@ -11,28 +11,19 @@ def check_rst_links(file_path):
 
     `free online courses on Coursera <https://www.coursera.org/learn/python>`__
 
-    re.compile(r"[^]+_+|[^]+__", flags=re.DOTALL):
+    This code matches the urls: re.compile(r"`[^`]+`_+", flags=re.DOTALL)
 
     re.compile() creates a compiled regex object that can be used for pattern matching.
-    The pattern inside the parentheses defines what we're searching for.
-    Flags can modify how the regex engine interprets the pattern. 
-    In this case, re.DOTALL allows the dot (.) to match newline characters as well.
 
-    The pattern consists of two alternatives separated by the pipe (|) symbol.
-    
-    First Alternative [^]+_+
-    [^]     matches any character except a backtick (`` ``).
-    +       means one or more occurrences of the preceding character class (in this case, any character except a backtick).
+    `[^`]   matches any character except a backtick `
+    +       1st + matches one or more occurrences of a backtick `
     _       matches a literal underscore character.
-    +       means one or more underscores.
+    +       2nd + matches one or more underscores.
     
-    This part of the pattern matches backticked text followed by one or more underscores (e.g., `` some_text_`).
-    
-    Second Alternative [^]+__
-    [^]+`   Same as above, it matches any character except a backtick.
-    __      Matches two consecutive underscore characters.
+    This part of the pattern matches backticked text followed by one or more underscores (e.g., ` some_text_
 
-    This part of the pattern matches backticked text followed by two underscores (e.g., `` another_text__`)."""
+    The re.DOTALL flag allows the dot (.) to match newline characters as well.
+    """
     try:
         with open(file_path, "r") as rst_file:
             content = rst_file.read()
@@ -41,7 +32,7 @@ def check_rst_links(file_path):
         return
 
     # Regular expression to match URLs in the .rst file.
-    url_pattern = re.compile(r"`[^`]+`_+|`[^`]+`__", flags=re.DOTALL)
+    url_pattern = re.compile(r"`[^`]+`_+", flags=re.DOTALL)
 
     # Secondary check for "< >" and ignore HTML tags like "</p>".
     occurrences = len(re.findall(r"<(?!/)[^>]+>", content, flags=re.DOTALL))
@@ -124,7 +115,7 @@ def check_rst_links(file_path):
             error_count += 1
             print("\n")
         except requests.RequestException:
-            rprint(f"[red]❌ Error: Unable to vlaidate URL '{url}' on line # {line}, connection was terminated by host.[/red]", sep="\n",)
+            rprint(f"[red]❌ Error: Unable to validate URL '{url}' on line # {line}, connection was terminated by host.[/red]", sep="\n",)
             error_count += 1
             print("\n")
 
