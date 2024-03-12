@@ -19,7 +19,7 @@ def check_rst_links(file_path):
     +       1st + matches one or more occurrences of a backtick `
     _       matches a literal underscore character.
     +       2nd + matches one or more underscores.
-    
+
     This part of the pattern matches backticked text followed by one or more underscores e.g., ` some_text_
 
     The re.DOTALL flag allows the dot (.) to match newline characters as well.
@@ -47,7 +47,10 @@ def check_rst_links(file_path):
         rprint(f"[dark_cyan]<> {url_tag}[/dark_cyan]", sep="\n")
         # Skip false positive url tags without HTTP urls.
         if "http" not in str(url_tag):
-            rprint(f"[gold3]🛈  Warning: skipped {url_tag}, url is not http.[/gold3]", sep="\n")
+            rprint(
+                f"[gold3]🛈  Warning: skipped {url_tag}, url is not http.[/gold3]",
+                sep="\n",
+            )
             warning_count += 1
             print("\n")
             continue
@@ -66,15 +69,12 @@ def check_rst_links(file_path):
             error_count += 1
         # Check if the URL is valid.
         required_characters = {"<", ">", "`", "_", "`_", ">`_"}
-        is_valid = all(char in url_tag for char in required_characters)
-        if is_valid:
+        if all(char in url_tag for char in required_characters):
             rprint(
                 "[dark_cyan]✅ Meets .rst url tag requirements.[/dark_cyan]", sep="\n"
             )
         else:
-            rprint(
-                "[red]❌ Tag doesn't meet .rst url tag requirements.[/red]", sep="\n"
-            )
+            rprint("[red]❌ Tag doesn't meet .rst requirements.[/red]", sep="\n")
             error_count += 1
         line = content.count("\n", 0, match.start()) + 1
         try:
@@ -115,7 +115,10 @@ def check_rst_links(file_path):
             error_count += 1
             print("\n")
         except requests.RequestException:
-            rprint(f"[red]❌ Error: Unable to validate URL '{url}' on line # {line}, connection was terminated by host.[/red]", sep="\n",)
+            rprint(
+                f"[red]❌ Error: Unable to validate URL '{url}' on line # {line}, connection was terminated by host.[/red]",
+                sep="\n",
+            )
             error_count += 1
             print("\n")
 
@@ -132,7 +135,9 @@ def check_rst_links(file_path):
     else:
         print(f"🛈  {warning_count} total warning(s).")
     if occurrences != matches:
-        print(f"❌ Possible discrepancy: found {occurrences} occurrences of <> brackets and only {matches} url matches. Check the document for invalid urls.")
+        print(
+            f"❌ Possible discrepancy: found {occurrences} occurrences of <> brackets and only {matches} url matches. Check the document for invalid urls."
+        )
     return None
 
 
