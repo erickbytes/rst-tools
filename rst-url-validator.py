@@ -20,7 +20,7 @@ def check_rst_links(file_path):
     _       matches a literal underscore character.
     +       2nd + matches one or more underscores.
     
-    This part of the pattern matches backticked text followed by one or more underscores (e.g., ` some_text_
+    This part of the pattern matches backticked text followed by one or more underscores e.g., ` some_text_
 
     The re.DOTALL flag allows the dot (.) to match newline characters as well.
     """
