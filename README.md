@@ -20,6 +20,7 @@ python rst-url-validator.py your_file.rst
 ```
 python rst-url-validator.py your_file.rst --debug
 ```
+Passing --debug his will print the HTTP request information associated with a url.
 
 **External .rst Links**
 

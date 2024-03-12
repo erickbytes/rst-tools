@@ -67,7 +67,7 @@ def check_rst_links(file_path):
         except:
             rprint("[red]❌ Failed to extract url from tag.[/red]", sep="\n")
             error_count += 1
-        # Check if the URL is valid.
+        # Check if the URL tag is valid.
         required_characters = {"<", ">", "`", "_", "`_", ">`_"}
         if all(char in url_tag for char in required_characters):
             rprint(
@@ -121,7 +121,6 @@ def check_rst_links(file_path):
             )
             error_count += 1
             print("\n")
-
     print(f"File: {file_path}")
     matches = len(list(url_pattern.finditer(content)))
     print(f"Scanned {matches} urls.")
@@ -129,7 +128,6 @@ def check_rst_links(file_path):
         print("✅ No errors found.")
     else:
         print(f"❌ {error_count} total error(s) found.")
-
     if warning_count == 0:
         print("✅ No warnings.")
     else:
